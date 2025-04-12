@@ -4,9 +4,11 @@ from django.urls import reverse
 from django.utils import timezone
 
 
+
+
+     
 class Staff(models.Model):
     STATUS = [("active", "Active"), ("inactive", "Inactive")]
-
     GENDER = [("male", "Male"), ("female", "Female")]
 
     current_status = models.CharField(max_length=10, choices=STATUS, default="active")
@@ -27,8 +29,12 @@ class Staff(models.Model):
     address = models.TextField(blank=True)
     others = models.TextField(blank=True)
 
+    subjects = models.ManyToManyField("corecode.Subject", blank=True)
+
     def __str__(self):
         return f"{self.surname} {self.firstname} {self.other_name}"
 
     def get_absolute_url(self):
         return reverse("staff-detail", kwargs={"pk": self.pk})
+    
+

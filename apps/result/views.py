@@ -1,21 +1,21 @@
+from registration.decorators import role_required
+from django.utils.decorators import method_decorator
+from utils.telegram import send_message
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView, View
-
-from apps.students.models import Student
-
+from .models import AcademicTerm
+from ..students.models import Student
 from .forms import CreateResults, EditResults
 from .models import Result
 
-
 @login_required
+@role_required(['admin', 'teacher'])
 def create_result(request):
     students = Student.objects.all()
     if request.method == "POST":
-
-        # after visiting the second page
         if "finish" in request.POST:
             form = CreateResults(request.POST)
             if form.is_valid():
@@ -45,11 +45,28 @@ def create_result(request):
                                         student=stu,
                                     )
                                 )
-
                 Result.objects.bulk_create(results)
+                
+                student_names = ", ".join(set([f"{r.student.firstname} {r.student.surname}" for r in results]))
+                subject_names = ", ".join(set([r.subject.name for r in results]))
+                class_name = results[0].current_class.name if results else "Unknown class"
+                
+                message = (
+                    f"📢 *New Grades Submitted!*\n\n"
+                    f"👩‍🏫 Teacher: *{request.user.get_full_name() or request.user.username}*\n"
+                    f"👨‍🎓 Students: *{student_names}*\n"
+                    f"📘 Subjects: *{subject_names}*\n"
+                    f"🏫 Class: *{class_name}*\n"
+                    f"📅 Session: *{session}* | Term: *{term}*\n"
+                )
+                
+                send_message(message)
+                
+
+                
+
                 return redirect("edit-results")
 
-        # after choosing students
         id_list = request.POST.getlist("students")
         if id_list:
             form = CreateResults(
@@ -65,11 +82,11 @@ def create_result(request):
                 {"students": studentlist, "form": form, "count": len(id_list)},
             )
         else:
-            messages.warning(request, "You didnt select any student.")
+            messages.warning(request, "You didn't select any student.")
     return render(request, "result/create_result.html", {"students": students})
 
-
 @login_required
+@role_required(['admin', 'teacher'])
 def edit_results(request):
     if request.method == "POST":
         form = EditResults(request.POST)
@@ -84,11 +101,12 @@ def edit_results(request):
         form = EditResults(queryset=results)
     return render(request, "result/edit_results.html", {"formset": form})
 
-
+@method_decorator(role_required(['admin', 'teacher', 'student']), name='dispatch')
 class ResultListView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         results = Result.objects.filter(
-            session=request.current_session, term=request.current_term
+            session=request.current_session,
+            term=AcademicTerm.objects.filter(current=True).first()
         )
         bulk = {}
 
@@ -112,3 +130,5 @@ class ResultListView(LoginRequiredMixin, View):
 
         context = {"results": bulk}
         return render(request, "result/all_results.html", context)
+
+

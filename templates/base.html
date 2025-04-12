@@ -60,14 +60,14 @@
               <i class="fas fa-user mr-2"></i> Profile
             </a>
             <div class="dropdown-divider"></div>
-            <a href="{% url 'logout' %}" class="dropdown-item">
+            <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
+              {% csrf_token %}
+            </form>
+            
+            <a href="#" class="dropdown-item" onclick="document.getElementById('logout-form').submit();">
               <i class="fas fa-sign-out"></i> Sign out
             </a>
           </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-widget="control-sidebar" data-slide="true"
-            href="#" role="button"><i class="fas fa-th-large"></i></a>
         </li>
       </ul>
     </nav>
@@ -180,15 +180,15 @@
                     </p>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a href="{% url 'schedule' %}" class="nav-link">
+                    <i class="nav-icon fas fa-calendar-alt"></i>
+                    <p>
+                      Schedule
+                    </p>
+                  </a>
+                </li>
               </ul>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'configs' %}" class="nav-link">
-                <i class="nav-icon fas fa-cog"></i>
-                <p>
-                  Settings
-                </p>
-              </a>
             </li>
 
 
@@ -248,11 +248,6 @@
       <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-      <!-- Control sidebar content goes here -->
-    </aside>
     <!-- /.control-sidebar -->
 
 

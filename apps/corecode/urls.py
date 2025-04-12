@@ -11,7 +11,6 @@ from .views import (
     SessionDeleteView,
     SessionListView,
     SessionUpdateView,
-    SiteConfigView,
     SubjectCreateView,
     SubjectDeleteView,
     SubjectListView,
@@ -24,7 +23,6 @@ from .views import (
 
 urlpatterns = [
     path("", IndexView.as_view(), name="home"),
-    path("site-config", SiteConfigView.as_view(), name="configs"),
     path(
         "current-session/", CurrentSessionAndTermView.as_view(), name="current-session"
     ),

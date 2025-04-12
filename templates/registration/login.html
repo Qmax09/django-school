@@ -82,17 +82,15 @@
                     </button>
                     <input type="hidden" name="next" value="{{ next }}">
 
-                </div>
-
+                </div> 
                 <div class="text-center p-t-12">
-                    <span class="txt1">
-                        Forgot
-                    </span>
-                    <a class="txt2" href="#">
-                        Username / Password?
-                    </a>
-                </div>
-
+                  <span class="txt1">
+                    No account?
+                  </span>
+                  <a class="txt2" href="{% url 'register' %}">
+                    Sign up
+                  </a>
+              </div>
                 
             </form>
         </div>

@@ -2,10 +2,8 @@
 {% load widget_tweaks %}
 
 {% block title %}
-  {{title}}
+  {{ title }}
 {% endblock title %}
-
-
 
 {% block title-side %}{% endblock title-side %}
 
@@ -18,21 +16,31 @@
         <div class="mb-3">
           {% for field in form %}
           <div class="form-group">
-            {{ field.label_tag}}
-            {{ field | add_class:"form-control" |add_error_class:"is-invalid" | attr:"required"}}
-            {{field.help_text}}
-            {{field.errors}}
+            {{ field.label_tag }}
+            
+            {% if field.name == "teachers" %}
+              <select name="teachers" id="id_teachers" class="form-control" multiple>
+                {% for teacher in field.field.queryset %}
+                  <option value="{{ teacher.id }}" {% if teacher in form.instance.teachers.all %}selected{% endif %}>
+                    {{ teacher.surname }} {{ teacher.firstname }} {{ teacher.other_name }}
+                  </option>
+                {% endfor %}
+              </select>
+            {% else %}
+              {{ field | add_class:"form-control" | add_error_class:"is-invalid" | attr:"required" }}
+            {% endif %}
+            
+            {{ field.help_text }}
+            {{ field.errors }}
           </div>
           {% endfor %}
         </div>
 
-
         <input type="submit" value="Save" class="w-25 btn btn-primary">
-
       </form>
     </div>
   </div>
-
 {% endblock content %}
+
 
 

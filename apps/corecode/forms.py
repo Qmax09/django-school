@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm, modelformset_factory
-
+from .models import StudentClass, Teacher
+from ..staffs.models import Staff
 from .models import (
     AcademicSession,
     AcademicTerm,
@@ -43,12 +44,17 @@ class SubjectForm(ModelForm):
         fields = ["name"]
 
 
-class StudentClassForm(ModelForm):
-    prefix = "Class"
+class StudentClassForm(forms.ModelForm):
+    teachers = forms.ModelMultipleChoiceField(
+        queryset=Staff.objects.all(),
+        widget=forms.SelectMultiple(attrs={"class": "form-control"}),  
+        required=False  
+    )
 
     class Meta:
         model = StudentClass
-        fields = ["name"]
+        fields = ["name", "teachers"]  
+
 
 
 class CurrentSessionForm(forms.Form):

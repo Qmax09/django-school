@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: school-app
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn school_app.wsgi:application"
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        value: your-secret-key
+      - key: DEBUG
+        value: False
