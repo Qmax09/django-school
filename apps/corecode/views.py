@@ -246,15 +246,3 @@ class CurrentSessionAndTermView(LoginRequiredMixin, View):
             AcademicTerm.objects.filter(name=term).update(current=True)
         return render(request, self.template_name, {"form": form})
 
-
-@csrf_exempt
-def run_migrations(request):
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT 1")  # Проверка на подключение
-
-        from django.core.management import call_command
-        call_command("migrate")
-        return HttpResponse("✅ Migrations applied.")
-    except Exception as e:
-        return HttpResponse(f"❌ Migration error: {str(e)}", status=500)
