@@ -246,30 +246,7 @@ class CurrentSessionAndTermView(LoginRequiredMixin, View):
             AcademicTerm.objects.filter(name=term).update(current=True)
         return render(request, self.template_name, {"form": form})
 
-from django.apps import AppConfig
-from django.contrib.auth import get_user_model
-from django.db.utils import OperationalError, ProgrammingError
 
-from django.apps import AppConfig
-from django.contrib.auth import get_user_model
-from django.db.utils import OperationalError, ProgrammingError
-
-class CorecodeConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.corecode'
-
-    def ready(self):
-        try:
-            User = get_user_model()
-            admin, created = User.objects.get_or_create(username="admin")
-            admin.email = "admin@example.com"
-            admin.set_password("admin1234")
-            admin.is_staff = True
-            admin.is_superuser = True
-            admin.save()
-            print("✅ Superuser 'admin' created or updated.")
-        except (OperationalError, ProgrammingError):
-            pass
 
 
 
