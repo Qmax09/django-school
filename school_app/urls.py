@@ -17,5 +17,5 @@ urlpatterns = [
     path("", register_view, name="register"),
     path("register/", register_view, name="register"),
     path("schedule/", include("schedule.urls")),
-    path('run-migrations/', run_migrations),
+     path('run-migrations/', run_migrations),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
