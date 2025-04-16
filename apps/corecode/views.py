@@ -259,11 +259,11 @@ class CorecodeConfig(AppConfig):
             User = get_user_model()
             if not User.objects.filter(username="admin").exists():
                 User.objects.create_superuser(
-                    username="Admin",
+                    username="admin",
                     email="admin@example.com",
-                    password="0000"
+                    password="admin1234"
                 )
                 print("✅ Superuser 'admin' created")
         except (OperationalError, ProgrammingError):
-            
-            pass
+            pass  # База ещё может быть не готова — пропускаем
+
