@@ -12,8 +12,10 @@ from django.views.generic import ListView, TemplateView, View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from ..staffs.models import Staff
 from django.forms import modelformset_factory
-from django.http import HttpResponse
-from django.core.management import call_command
+
+from django.views.decorators.csrf import csrf_exempt
+from django.db import connection
+
 
 from .forms import (
     AcademicSessionForm,
@@ -245,8 +247,13 @@ class CurrentSessionAndTermView(LoginRequiredMixin, View):
         return render(request, self.template_name, {"form": form})
 
 
+@csrf_exempt
 def run_migrations(request):
     try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")  # Проверка на подключение
+
+        from django.core.management import call_command
         call_command("migrate")
         return HttpResponse("✅ Migrations applied.")
     except Exception as e:
