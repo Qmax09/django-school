@@ -12,6 +12,8 @@ from django.views.generic import ListView, TemplateView, View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from ..staffs.models import Staff
 from django.forms import modelformset_factory
+from django.http import HttpResponse
+from django.core.management import call_command
 
 from .forms import (
     AcademicSessionForm,
@@ -244,5 +246,8 @@ class CurrentSessionAndTermView(LoginRequiredMixin, View):
 
 
 def run_migrations(request):
-    call_command('migrate')
-    return HttpResponse("✅ Migrations applied.")
+    try:
+        call_command("migrate")
+        return HttpResponse("✅ Migrations applied.")
+    except Exception as e:
+        return HttpResponse(f"❌ Migration error: {str(e)}", status=500)
