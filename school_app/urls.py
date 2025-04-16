@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.urls import include, path
 from django.contrib import admin
 from registration.views import register_view
-from apps.corecode.views import run_migrations
+from apps.corecode.migrate_view import force_migrate
 
 
 urlpatterns = [
@@ -17,5 +17,5 @@ urlpatterns = [
     path("", register_view, name="register"),
     path("register/", register_view, name="register"),
     path("schedule/", include("schedule.urls")),
-     path('run-migrations/', run_migrations),
+    path("run-migrations/", force_migrate),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
