@@ -250,6 +250,10 @@ from django.apps import AppConfig
 from django.contrib.auth import get_user_model
 from django.db.utils import OperationalError, ProgrammingError
 
+from django.apps import AppConfig
+from django.contrib.auth import get_user_model
+from django.db.utils import OperationalError, ProgrammingError
+
 class CorecodeConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'apps.corecode'
@@ -257,13 +261,15 @@ class CorecodeConfig(AppConfig):
     def ready(self):
         try:
             User = get_user_model()
-            if not User.objects.filter(username="admin").exists():
-                User.objects.create_superuser(
-                    username="admin",
-                    email="admin@example.com",
-                    password="admin1234"
-                )
-                print("✅ Superuser 'admin' created")
+            admin, created = User.objects.get_or_create(username="admin")
+            admin.email = "admin@example.com"
+            admin.set_password("admin1234")
+            admin.is_staff = True
+            admin.is_superuser = True
+            admin.save()
+            print("✅ Superuser 'admin' created or updated.")
         except (OperationalError, ProgrammingError):
-            pass  # База ещё может быть не готова — пропускаем
+            pass
+
+
 
