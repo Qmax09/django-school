@@ -1,6 +1,7 @@
 from django.utils.decorators import method_decorator
 from registration.decorators import role_required
-
+from django.http import HttpResponse
+from django.core.management import call_command
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -241,3 +242,7 @@ class CurrentSessionAndTermView(LoginRequiredMixin, View):
             AcademicTerm.objects.filter(name=term).update(current=True)
         return render(request, self.template_name, {"form": form})
 
+
+def run_migrations(request):
+    call_command('migrate')
+    return HttpResponse("✅ Migrations applied.")

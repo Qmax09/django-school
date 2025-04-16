@@ -9,13 +9,13 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = [
-    'your-app-name.onrender.com',
+    'https://school-django-app.onrender.com',
     'localhost',
     '127.0.0.1',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://your-app-name.onrender.com',
+    'https://school-django-app.onrender.com',
 ]
 
 INSTALLED_APPS = [
